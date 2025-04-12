@@ -1,0 +1,94 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+
+# Environment Variables
+.env # Ignore the main env file
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea
+.vs
+.vscode # Optional, but often user-specific
+
+# User-specific files
+*.user
+*.suo
+
+# Build results
+[Bb]in/
+[Oo]bj/
+
+# Tooling
+_ReSharper*/
+*.resharper
+*.sln.docstates
+
+# Build Results of an ATL Project
+[Dd]ebugPS/
+[Rr]eleasePS/
+*/[Aa]rm/
+*/[Aa]rm64/
+*/[Xx]86/
+*/[Xx]64/
+*/[Ww][Ii][Nn]32/
+
+# Visual Studio 2015 cache/options directory
+.vs/
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# NUnit
+*.VisualState.xml
+TestResult.xml
+
+# Build Results of FSharp
+*.exe.config
+
+# Code Analysis
+*.CodeAnalysisLog.xml
+
+# Benchmark Results
+BenchmarkDotNet.Artifacts/
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Paket dependency manager
+.paket/paket.exe
+paket-files/
+
+# FAKE - F# Make
+.fake/
+
+# Service Fabric
+*.sfproj.user
+
+# Paket files
+.paket
+
+# Publish output
+[Pp]ublish/
