@@ -5,6 +5,7 @@ import StoryManager from './components/StoryManager';
 import TaskManager from './components/TaskManager';
 import LoginPage from "./pages/LoginPage";
 import { useAuth } from "./contexts/AuthContext";
+import { ThemeProvider } from "./contexts/ThemeContext";
 
 const ACTIVE_PROJECT_ID_STORAGE_KEY = 'activeProjectId';
 
@@ -35,8 +36,8 @@ function App() {
 
   if (isLoading) {
       return (
-          <div className="min-h-screen flex items-center justify-center bg-gray-100">
-              Ładowanie...
+          <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
+              <span className="text-gray-700 dark:text-gray-200">Ładowanie...</span>
           </div>
       );
   }
@@ -46,13 +47,13 @@ function App() {
   }
 
   return (
-    <div className="flex flex-col bg-gray-100 min-h-screen h-screen overflow-hidden">
-      <div className="flex-shrink-0 w-full px-4 sm:px-6 lg:px-8 py-3 shadow-sm bg-white border-b border-gray-200">
+    <div className="flex flex-col bg-gray-100 dark:bg-gray-900 min-h-screen h-screen overflow-hidden">
+      <div className="flex-shrink-0 w-full px-4 sm:px-6 lg:px-8 py-3 shadow-sm bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <UserProfile />
           <button
             onClick={logout}
-            className="text-sm font-medium text-red-600 hover:text-red-800 bg-red-100 hover:bg-red-200 px-3 py-1 rounded-md transition duration-150 ease-in-out"
+            className="text-sm font-medium text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 bg-red-100 dark:bg-red-900 hover:bg-red-200 dark:hover:bg-red-800 px-3 py-1 rounded-md transition duration-150 ease-in-out"
           >
               Wyloguj
           </button>
@@ -75,7 +76,7 @@ function App() {
                 <TaskManager activeProjectId={activeProjectId} />
               </>
             ) : (
-              <div className="bg-white p-6 rounded-lg shadow-md text-center text-gray-500 h-full flex items-center justify-center">
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md text-center text-gray-500 dark:text-gray-300 h-full flex items-center justify-center">
                 <p className="text-lg">Wybierz projekt z listy po lewej, aby zobaczyć historyjki i zadania.</p>
               </div>
             )}
@@ -86,4 +87,10 @@ function App() {
   );
 }
 
-export default App;
+export default function AppWithTheme() {
+  return (
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
+  );
+}

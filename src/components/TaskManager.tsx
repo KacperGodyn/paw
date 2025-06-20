@@ -129,19 +129,19 @@ export const TaskManager: React.FC<TaskManagerProps> = ({ activeProjectId }) => 
 
   if (isLoading) {
       return (
-          <div className="bg-white p-4 rounded-lg shadow-md h-full flex items-center justify-center text-gray-500">
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md h-full flex items-center justify-center text-gray-500 dark:text-gray-300">
               Ładowanie zadań...
           </div>
       );
   }
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md flex flex-col h-full overflow-hidden">
+    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md flex flex-col h-full overflow-hidden">
       <div className="flex justify-between items-center mb-4 flex-shrink-0">
-        <h2 className="text-xl font-semibold text-gray-700">Zadania</h2>
+        <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-200">Zadania</h2>
         <button
           onClick={handleOpenAddTaskModal}
-          className="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-1.5 px-3 rounded-md text-sm transition duration-150 ease-in-out"
+          className="flex items-center bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-white font-semibold py-1.5 px-3 rounded-md text-sm transition duration-150 ease-in-out"
           title="Dodaj nowe zadanie"
         >
           {<FiPlus className="h-4 w-4 mr-1" /> as React.JSX.Element}
@@ -360,19 +360,19 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, taskToEdit, stor
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg">
-        <div className="flex justify-between items-center border-b pb-3 mb-4">
-          <h3 className="text-lg font-semibold text-gray-800">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-lg">
+        <div className="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-3 mb-4">
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
             {taskToEdit ? "Edytuj zadanie" : "Dodaj nowe zadanie"}
           </h3>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600" title="Zamknij">
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" title="Zamknij">
             {<FiX className="h-5 w-5" /> as React.JSX.Element}
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="taskName" className="block text-sm font-medium text-gray-700 mb-1">Nazwa zadania</label>
+            <label htmlFor="taskName" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Nazwa zadania</label>
             <input
               id="taskName"
               type="text"
@@ -380,86 +380,80 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, taskToEdit, stor
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="border border-gray-300 p-2 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm"
+              className="border border-gray-300 dark:border-gray-600 p-2 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
             />
           </div>
 
           <div>
-            <label htmlFor="taskDescription" className="block text-sm font-medium text-gray-700 mb-1">Opis</label>
+            <label htmlFor="taskDescription" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Opis</label>
             <textarea
               id="taskDescription"
               placeholder="Dodatkowe szczegóły (opcjonalnie)"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              className="border border-gray-300 p-2 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm"
+              className="border border-gray-300 dark:border-gray-600 p-2 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-                <label htmlFor="taskPriority" className="block text-sm font-medium text-gray-700 mb-1">Priorytet</label>
-                <select
-                    id="taskPriority"
-                    value={priority}
-                    onChange={(e) => setPriority(e.target.value as TaskPriority)}
-                    required
-                    className="border border-gray-300 p-2 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white text-sm"
-                >
-                    <option value="low">Niski</option>
-                    <option value="medium">Średni</option>
-                    <option value="high">Wysoki</option>
-                </select>
+              <label htmlFor="taskPriority" className="block text-xs font-medium text-gray-700 dark:text-gray-200 mb-1">Priorytet</label>
+              <select
+                id="taskPriority"
+                value={priority}
+                onChange={(e) => setPriority(e.target.value as TaskPriority)}
+                required
+                className="border border-gray-300 dark:border-gray-600 p-2 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-gray-100"
+              >
+                <option value="low">Niski</option>
+                <option value="medium">Średni</option>
+                <option value="high">Wysoki</option>
+              </select>
             </div>
             <div>
-                <label htmlFor="taskStory" className="block text-sm font-medium text-gray-700 mb-1">Historyjka</label>
-                <select
-                    id="taskStory"
-                    value={storyId ?? ""}
-                    onChange={(e) => setStoryId(e.target.value || null)}
-                    required
-                    className="border border-gray-300 p-2 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white text-sm"
-                >
-                    <option value="" disabled>Wybierz historyjkę...</option>
-                    {availableStories.length > 0 ? (
-                         availableStories.map(story => (
-                           <option key={story.id} value={story.id}>
-                              {story.name}
-                           </option>
-                         ))
-                     ) : (
-                         <option value="" disabled>Brak dostępnych historyjek</option>
-                     )}
-                </select>
+              <label htmlFor="taskStory" className="block text-xs font-medium text-gray-700 dark:text-gray-200 mb-1">Historyjka</label>
+              <select
+                id="taskStory"
+                value={storyId ?? ''}
+                onChange={(e) => setStoryId(e.target.value || null)}
+                required
+                className="border border-gray-300 dark:border-gray-600 p-2 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-gray-100"
+              >
+                <option value="" disabled>Wybierz historyjkę...</option>
+                {availableStories.map(story => (
+                  <option key={story.id} value={story.id}>{story.name}</option>
+                ))}
+              </select>
             </div>
             <div>
-                <label htmlFor="taskEstTime" className="block text-sm font-medium text-gray-700 mb-1">Szac. czas (h)</label>
-                <input
-                    id="taskEstTime"
-                    type="number"
-                    placeholder="np. 4"
-                    value={estimatedTime}
-                    onChange={(e) => setEstimatedTime(e.target.value)}
-                    min="0"
-                    step="0.5"
-                    className="border border-gray-300 p-2 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" // Hide number spinners
-                />
+              <label htmlFor="taskEstimatedTime" className="block text-xs font-medium text-gray-700 dark:text-gray-200 mb-1">Szacowany czas (h)</label>
+              <input
+                id="taskEstimatedTime"
+                type="number"
+                min="0"
+                step="0.1"
+                placeholder="np. 2.5"
+                value={estimatedTime}
+                onChange={(e) => setEstimatedTime(e.target.value)}
+                className="border border-gray-300 dark:border-gray-600 p-2 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+              />
             </div>
           </div>
 
-          <div className="flex justify-end space-x-3 border-t pt-4 mt-4">
+          <div className="flex justify-end space-x-2">
             <button
               type="button"
               onClick={onClose}
-              className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-md text-sm transition duration-150 ease-in-out"
+              className="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-semibold py-1.5 px-3 rounded-md text-sm transition duration-150 ease-in-out"
             >
               Anuluj
             </button>
             <button
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md text-sm transition duration-150 ease-in-out"
+              className="bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-white font-semibold py-1.5 px-3 rounded-md text-sm transition duration-150 ease-in-out"
             >
-              {taskToEdit ? "Zapisz zmiany" : "Dodaj zadanie"}
+              {taskToEdit ? "Zapisz" : "Dodaj"}
             </button>
           </div>
         </form>

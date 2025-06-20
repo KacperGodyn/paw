@@ -195,12 +195,12 @@ const StoryManager: React.FC<StoryManagerProps> = ({ activeProjectId }) => {
   }
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md flex flex-col h-full overflow-hidden">
+    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md flex flex-col h-full overflow-hidden">
       <div className="flex justify-between items-center mb-4 flex-shrink-0">
-        <h2 className="text-xl font-semibold text-gray-700">Historyjki</h2>
+        <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-200">Historyjki</h2>
         <button
           onClick={handleShowAddForm}
-          className="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-1.5 px-3 rounded-md text-sm transition duration-150 ease-in-out"
+          className="flex items-center bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-white font-semibold py-1.5 px-3 rounded-md text-sm transition duration-150 ease-in-out"
           title="Dodaj nową historyjkę"
         >
           {<FiPlus className="h-4 w-4 mr-1" /> as React.JSX.Element}
@@ -209,8 +209,8 @@ const StoryManager: React.FC<StoryManagerProps> = ({ activeProjectId }) => {
       </div>
 
       {isFormVisible && (
-        <div className="flex-shrink-0 mb-4 border-t border-b border-gray-200 py-4">
-          <h3 className="text-lg font-medium text-gray-800 mb-3">
+        <div className="flex-shrink-0 mb-4 border-t border-b border-gray-200 dark:border-gray-700 py-4 px-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
+          <h3 className="text-lg font-medium text-gray-800 dark:text-gray-100 mb-3">
             {editingStory ? "Edytuj historyjkę" : "Dodaj nową historyjkę"}
           </h3>
           <form onSubmit={handleSubmit} className="space-y-3">
@@ -221,7 +221,7 @@ const StoryManager: React.FC<StoryManagerProps> = ({ activeProjectId }) => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="border border-gray-300 p-2 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm"
+              className="border border-gray-300 dark:border-gray-600 p-2 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
             />
             <textarea
               id="storyDescription"
@@ -229,7 +229,7 @@ const StoryManager: React.FC<StoryManagerProps> = ({ activeProjectId }) => {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={2}
-              className="border border-gray-300 p-2 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm"
+              className="border border-gray-300 dark:border-gray-600 p-2 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
             />
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <select
@@ -237,7 +237,7 @@ const StoryManager: React.FC<StoryManagerProps> = ({ activeProjectId }) => {
                 value={priority}
                 onChange={(e) => setPriority(e.target.value as StoryPriority)}
                 required
-                className="border border-gray-300 p-2 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white text-sm"
+                className="border border-gray-300 dark:border-gray-600 p-2 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-gray-100"
               >
                 <option value="" disabled>Priorytet...</option>
                 <option value="low">Niski</option>
@@ -249,7 +249,7 @@ const StoryManager: React.FC<StoryManagerProps> = ({ activeProjectId }) => {
                 value={status}
                 onChange={(e) => setStatus(e.target.value as StoryStatus)}
                 required
-                className="border border-gray-300 p-2 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white text-sm"
+                className="border border-gray-300 dark:border-gray-600 p-2 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-gray-100"
               >
                  <option value="" disabled>Status...</option>
                  <option value="todo">Do zrobienia</option>
@@ -260,7 +260,7 @@ const StoryManager: React.FC<StoryManagerProps> = ({ activeProjectId }) => {
                 id="storyOwner"
                 value={ownerId ?? ""}
                 onChange={(e) => setOwnerId(e.target.value || null)}
-                className="border border-gray-300 p-2 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white text-sm"
+                className="border border-gray-300 dark:border-gray-600 p-2 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-gray-100"
               >
                 <option value="">Właściciel (opcjonalnie)...</option>
                 {mockUsers.map(user => (
@@ -270,17 +270,17 @@ const StoryManager: React.FC<StoryManagerProps> = ({ activeProjectId }) => {
                 ))}
               </select>
             </div>
-            <div className="flex justify-end space-x-2">
+            <div className="flex justify-end space-x-2 px-2">
               <button
                 type="button"
                 onClick={handleCancelEdit}
-                className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-1.5 px-3 rounded-md text-sm transition duration-150 ease-in-out"
+                className="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-semibold py-1.5 px-3 rounded-md text-sm transition duration-150 ease-in-out"
               >
                 Anuluj
               </button>
               <button
                 type="submit"
-                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-1.5 px-3 rounded-md text-sm transition duration-150 ease-in-out"
+                className="bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-white font-semibold py-1.5 px-3 rounded-md text-sm transition duration-150 ease-in-out"
               >
                 {editingStory ? "Zapisz" : "Dodaj"}
               </button>
