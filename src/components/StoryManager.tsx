@@ -103,20 +103,27 @@ const StoryManager: React.FC<StoryManagerProps> = ({ activeProjectId }) => {
   const [stories, setStories] = useState<Story[]>([]);
   const [editingStory, setEditingStory] = useState<Story | null>(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  // Form state
   const [name, setName] = useState<string>(defaultStoryValues.name);
   const [description, setDescription] = useState<string>(defaultStoryValues.description);
   const [priority, setPriority] = useState<StoryPriority>(defaultStoryValues.priority);
   const [status, setStatus] = useState<StoryStatus>(defaultStoryValues.status);
   const [ownerId, setOwnerId] = useState<string | null>(defaultStoryValues.ownerId);
 
-  useEffect(() => {
+  const fetchStories = async () => {
     if (activeProjectId) {
-      setStories(StoryService.getStoriesByProject(activeProjectId));
+      setLoading(true);
+      const data = await StoryService.getStoriesByProject(activeProjectId);
+      setStories(data);
+      setLoading(false);
     } else {
       setStories([]);
     }
+  };
+
+  useEffect(() => {
+    fetchStories();
     resetForm();
     setIsFormVisible(false);
   }, [activeProjectId]);
@@ -150,19 +157,19 @@ const StoryManager: React.FC<StoryManagerProps> = ({ activeProjectId }) => {
     setIsFormVisible(false);
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!activeProjectId) return;
 
-    const storyData = { name, description, priority, status, ownerId: ownerId || null, projectId: activeProjectId };
+    const storyData = { name, description, priority, status, ownerId: ownerId || null, projectId: activeProjectId, createdAt: new Date().toISOString() };
 
     if (editingStory) {
-      StoryService.updateStory({ ...editingStory, ...storyData });
+      await StoryService.updateStory({ ...editingStory, ...storyData });
     } else {
-      StoryService.addStory(storyData);
+      await StoryService.addStory(storyData);
     }
 
-    setStories(StoryService.getStoriesByProject(activeProjectId));
+    await fetchStories();
     resetForm();
     setIsFormVisible(false);
   };
@@ -177,16 +184,12 @@ const StoryManager: React.FC<StoryManagerProps> = ({ activeProjectId }) => {
     setIsFormVisible(true);
   };
 
-  const handleDelete = (id: string) => {
-    if (window.confirm("Czy na pewno chcesz usunąć tę historyjkę?")) {
-      StoryService.deleteStory(id);
-      if (activeProjectId) {
-        setStories(StoryService.getStoriesByProject(activeProjectId));
-      }
-      if (editingStory?.id === id) {
-        resetForm();
-        setIsFormVisible(false);
-      }
+  const handleDelete = async (id: string) => {
+    await StoryService.deleteStory(id);
+    await fetchStories();
+    if (editingStory?.id === id) {
+      resetForm();
+      setIsFormVisible(false);
     }
   };
 
@@ -290,7 +293,9 @@ const StoryManager: React.FC<StoryManagerProps> = ({ activeProjectId }) => {
       )}
 
       <div className="flex-grow overflow-hidden">
-        {stories.length === 0 && !isFormVisible ? (
+        {loading ? (
+          <p className="text-center text-gray-500 dark:text-gray-400 pt-4 text-sm">Ładowanie historyjek...</p>
+        ) : stories.length === 0 && !isFormVisible ? (
           <p className="text-center text-gray-500 pt-4 text-sm">Brak historyjek dla tego projektu. Kliknij 'Dodaj'.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-full">

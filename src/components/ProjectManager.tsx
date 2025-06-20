@@ -1,45 +1,7 @@
 import React, { useState, useEffect, FormEvent } from "react";
-import { v4 as uuidv4 } from "uuid";
 import { FiEdit, FiTrash2, FiCheckCircle } from 'react-icons/fi';
-
-interface Project {
-  id: string;
-  name: string;
-  description: string;
-}
-
-class ProjectService {
-  static STORAGE_KEY = "projects";
-
-  static getProjects(): Project[] {
-    const projects = localStorage.getItem(this.STORAGE_KEY);
-    return projects ? JSON.parse(projects) : [];
-  }
-
-  static saveProjects(projects: Project[]) {
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(projects));
-  }
-
-  static addProject(project: Omit<Project, "id">) {
-    const projects = this.getProjects();
-    projects.push({ id: uuidv4(), ...project });
-    this.saveProjects(projects);
-  }
-
-  static updateProject(updatedProject: Project) {
-    let projects = this.getProjects();
-    projects = projects.map((project) =>
-      project.id === updatedProject.id ? updatedProject : project
-    );
-    this.saveProjects(projects);
-  }
-
-  static deleteProject(id: string) {
-    let projects = this.getProjects();
-    projects = projects.filter((project) => project.id !== id);
-    this.saveProjects(projects);
-  }
-}
+import { ProjectService } from '../services/ProjectService';
+import { Project } from '../models/index';
 
 interface ProjectManagerProps {
   activeProjectId: string | null;
@@ -51,20 +13,28 @@ export default function ProjectManager({ activeProjectId, onSelectProject }: Pro
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const fetchProjects = async () => {
+    setLoading(true);
+    const data = await ProjectService.getProjects();
+    setProjects(data);
+    setLoading(false);
+  };
 
   useEffect(() => {
-    setProjects(ProjectService.getProjects());
+    fetchProjects();
   }, []);
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (editingProject) {
-      ProjectService.updateProject({ id: editingProject.id, name, description });
+      await ProjectService.updateProject({ id: editingProject.id, name, description });
       setEditingProject(null);
     } else {
-      ProjectService.addProject({ name, description });
+      await ProjectService.addProject({ name, description });
     }
-    setProjects(ProjectService.getProjects());
+    await fetchProjects();
     setName("");
     setDescription("");
   };
@@ -75,12 +45,12 @@ export default function ProjectManager({ activeProjectId, onSelectProject }: Pro
     setEditingProject(project);
   };
 
-  const handleDelete = (id: string) => {
-    ProjectService.deleteProject(id);
+  const handleDelete = async (id: string) => {
+    await ProjectService.deleteProject(id);
     if (id === activeProjectId) {
       onSelectProject(null);
     }
-    setProjects(ProjectService.getProjects());
+    await fetchProjects();
   };
 
   const handleSelect = (id: string) => {
@@ -120,7 +90,9 @@ export default function ProjectManager({ activeProjectId, onSelectProject }: Pro
       </div>
 
       <div className="flex-grow overflow-y-auto space-y-2 pr-1">
-        {projects.length > 0 ? (
+        {loading ? (
+          <p className="text-center text-gray-500 dark:text-gray-400 text-sm mt-4">Ładowanie projektów...</p>
+        ) : projects.length > 0 ? (
           projects.map((project) => {
             const isActive = project.id === activeProjectId;
             const ActiveIcon: React.JSX.Element | null = isActive ? <FiCheckCircle className="text-green-600 h-4 w-4" title="Aktywny"/> : null;

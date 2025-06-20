@@ -56,21 +56,24 @@ export const TaskManager: React.FC<TaskManagerProps> = ({ activeProjectId }) => 
   const [showTaskModal, setShowTaskModal] = useState<boolean>(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
 
-  useEffect(() => {
+  const fetchTasksAndStories = async () => {
     if (activeProjectId) {
       setIsLoading(true);
-      setTasks(TaskService.getTasksByProject(activeProjectId));
-      try {
-         setStories(StoryService.getStoriesByProject(activeProjectId));
-      } catch (error) {
-         console.error("Failed to fetch stories for project:", error);
-         setStories([]);
-      }
+      const [tasksData, storiesData] = await Promise.all([
+        TaskService.getTasksByProject(activeProjectId),
+        StoryService.getStoriesByProject(activeProjectId)
+      ]);
+      setTasks(tasksData);
+      setStories(storiesData);
       setIsLoading(false);
     } else {
       setTasks([]);
       setStories([]);
     }
+  };
+
+  useEffect(() => {
+    fetchTasksAndStories();
   }, [activeProjectId]);
 
   const groupedTasks = useMemo(() => {
@@ -85,9 +88,9 @@ export const TaskManager: React.FC<TaskManagerProps> = ({ activeProjectId }) => 
     return groups;
   }, [tasks]);
 
-  const refreshTasks = () => {
+  const refreshTasks = async () => {
     if (activeProjectId) {
-      setTasks(TaskService.getTasksByProject(activeProjectId));
+      setTasks(await TaskService.getTasksByProject(activeProjectId));
     }
   };
 
@@ -106,21 +109,19 @@ export const TaskManager: React.FC<TaskManagerProps> = ({ activeProjectId }) => 
     setEditingTask(null);
   };
 
-  const handleDeleteTask = (taskId: string) => {
-     if (window.confirm("Czy na pewno chcesz usunąć to zadanie?")) {
-       TaskService.deleteTask(taskId);
-       refreshTasks();
-     }
+  const handleDeleteTask = async (taskId: string) => {
+     await TaskService.deleteTask(taskId);
+     await refreshTasks();
    };
 
-   const handleAssignUser = (taskId: string, userId: string) => {
-     TaskService.assignTask(taskId, userId);
-     refreshTasks();
+   const handleAssignUser = async (taskId: string, userId: string) => {
+     await TaskService.assignTask(taskId, userId);
+     await refreshTasks();
    };
 
-   const handleCompleteTask = (taskId: string) => {
-     TaskService.completeTask(taskId);
-     refreshTasks();
+   const handleCompleteTask = async (taskId: string) => {
+     await TaskService.completeTask(taskId);
+     await refreshTasks();
    };
 
   if (!activeProjectId) {
@@ -343,6 +344,10 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, taskToEdit, stor
       storyId,
       projectId: activeProjectId,
       estimatedTime: estimatedTime ? parseFloat(estimatedTime) : null,
+      status: 'todo' as TaskStatus,
+      createdAt: new Date().toISOString(),
+      startDate: null,
+      endDate: null,
     };
 
     if (taskToEdit) {

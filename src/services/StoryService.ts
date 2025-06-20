@@ -1,70 +1,39 @@
-// src/services/StoryService.ts
-import { v4 as uuidv4 } from "uuid";
-import { Story, StoryPriority, StoryStatus } from "../models";
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, where } from 'firebase/firestore';
+import { db } from '../firebase';
+import { Story } from '../models/index';
 
-// --- StoryService Class ---
 export class StoryService {
-  static STORAGE_KEY = "stories";
+  static COLLECTION = 'stories';
 
-  // Get all stories from storage
-  static getStories(): Story[] {
-    const stories = localStorage.getItem(this.STORAGE_KEY);
-    return stories ? JSON.parse(stories) : [];
+  static async getStories(): Promise<Story[]> {
+    const snapshot = await getDocs(collection(db, this.COLLECTION));
+    return snapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() } as Story));
   }
 
-  // Get stories only for a specific project
-  static getStoriesByProject(projectId: string): Story[] {
-    return this.getStories().filter(story => story.projectId === projectId);
+  static async getStoriesByProject(projectId: string): Promise<Story[]> {
+    const q = query(collection(db, this.COLLECTION), where('projectId', '==', projectId));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() } as Story));
   }
 
-  // Save all stories back to storage
-  static saveStories(stories: Story[]) {
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(stories));
+  static async saveStories(stories: Story[]) {
   }
 
-  // Add a new story
-  static addStory(storyData: Omit<Story, "id" | "createdAt">) {
-    const stories = this.getStories();
-    const newStory: Story = {
-      ...storyData,
-      id: uuidv4(),
-      createdAt: new Date().toISOString(),
-    };
-    stories.push(newStory);
-    this.saveStories(stories);
+  static async addStory(story: Omit<Story, 'id'>): Promise<void> {
+    await addDoc(collection(db, this.COLLECTION), story);
   }
 
-  // Update an existing story
-  static updateStory(updatedStory: Story) {
-    let stories = this.getStories();
-    stories = stories.map((story) =>
-      story.id === updatedStory.id ? updatedStory : story
-    );
-    this.saveStories(stories);
+  static async updateStory(updatedStory: Story): Promise<void> {
+    const ref = doc(db, this.COLLECTION, updatedStory.id);
+    const { id, ...data } = updatedStory;
+    await updateDoc(ref, data);
   }
 
-  // Delete a story by ID
-  static deleteStory(id: string) {
-    let stories = this.getStories();
-
-    const relatedTasks = localStorage.getItem("tasks");
-    if (relatedTasks) {
-      const tasks = JSON.parse(relatedTasks);
-      const storyHasTasks = tasks.some((task: { storyId: string }) => task.storyId === id);
-      if (storyHasTasks) {
-        alert("Cannot delete story: It has associated tasks.");
-        return; 
-      }
-    }
-
-    stories = stories.filter((story) => story.id !== id);
-    this.saveStories(stories);
+  static async deleteStory(id: string): Promise<void> {
+    const ref = doc(db, this.COLLECTION, id);
+    await deleteDoc(ref);
   }
 
-  // Delete all stories associated with a specific project ID
-  static deleteStoriesByProject(projectId: string) {
-    let stories = this.getStories();
-    stories = stories.filter(story => story.projectId !== projectId);
-    this.saveStories(stories);
+  static async deleteStoriesByProject(projectId: string) {
   }
 } 
