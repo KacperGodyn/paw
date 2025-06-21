@@ -71,6 +71,7 @@ export default function ProjectManager({ activeProjectId, onSelectProject }: Pro
               onChange={(e) => setName(e.target.value)}
               required
               className="border border-gray-300 dark:border-gray-600 p-2 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+              data-cy="project-name"
             />
           </div>
           <div>
@@ -83,7 +84,7 @@ export default function ProjectManager({ activeProjectId, onSelectProject }: Pro
               className="border border-gray-300 dark:border-gray-600 p-2 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
             />
           </div>
-          <button type="submit" className="w-full bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-md transition duration-150 ease-in-out text-sm">
+          <button data-cy="save-project" type="submit" className="w-full bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-md transition duration-150 ease-in-out text-sm">
             {editingProject ? "Zapisz zmiany" : "Dodaj projekt"}
           </button>
         </form>
@@ -112,6 +113,7 @@ export default function ProjectManager({ activeProjectId, onSelectProject }: Pro
                     onClick={(e) => { e.stopPropagation(); handleEdit(project); }}
                     className="text-gray-500 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 p-1 rounded transition duration-150 ease-in-out"
                     title="Edytuj"
+                    data-cy="edit-project-icon"
                   >
                     {<FiEdit className="h-4 w-4" /> as React.JSX.Element}
                   </button>
@@ -119,6 +121,7 @@ export default function ProjectManager({ activeProjectId, onSelectProject }: Pro
                     onClick={(e) => { e.stopPropagation(); handleDelete(project.id); }}
                     className="text-gray-500 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 p-1 rounded transition duration-150 ease-in-out"
                     title="Usuń"
+                    data-cy="delete-project"
                   >
                     {<FiTrash2 className="h-4 w-4" /> as React.JSX.Element}
                   </button>

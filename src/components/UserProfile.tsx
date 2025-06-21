@@ -24,7 +24,6 @@ const UserProfile: React.FC = () => {
 
   return (
     <div className="flex items-center space-x-3">
-      {/* Theme Switch */}
       <button
         onClick={toggleTheme}
         className="mr-1 p-1 rounded-full border border-gray-300 bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"

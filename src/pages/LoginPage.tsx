@@ -1,13 +1,10 @@
 import React, { useState, FormEvent, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 
-// Placeholder type for the expected token response
 interface TokenResponse {
     accessToken: string;
     refreshToken: string;
 }
-
-// Removed LoginPageProps
 
 const LoginPage: React.FC = () => {
     const { login: contextLogin } = useAuth();
@@ -16,19 +13,12 @@ const LoginPage: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
-    // --- DEBUG: Log process.env on mount ---
-    useEffect(() => {
-        console.log("DEBUG: process.env contents:", process.env);
-    }, []);
-    // --- END DEBUG ---
-
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setError(null);
         setIsLoading(true);
 
         const apiUrl = process.env.REACT_APP_API_URL;
-        console.log("DEBUG: Read apiUrl:", apiUrl); // Add log here too
         if (!apiUrl) {
             setError("API URL not configured. Please set REACT_APP_API_URL environment variable.");
             setIsLoading(false);
@@ -41,15 +31,13 @@ const LoginPage: React.FC = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ login: loginInput, password }), // Use renamed state variable
+                body: JSON.stringify({ login: loginInput, password }),
             });
 
             if (response.ok) {
                 const tokens = await response.json() as TokenResponse;
                 console.log('Login successful:', tokens);
-                // Call login from context to update state and store tokens
                 contextLogin(tokens.accessToken, tokens.refreshToken);
-                // No need for alert here, App.tsx will re-render
             } else if (response.status === 401) {
                 setError('Nieprawidłowy login lub hasło.');
             } else {
@@ -89,6 +77,7 @@ const LoginPage: React.FC = () => {
                                 value={loginInput}
                                 onChange={(e) => setLoginInput(e.target.value)}
                                 disabled={isLoading}
+                                data-cy="login-field"
                             />
                         </div>
                         <div>
@@ -104,6 +93,7 @@ const LoginPage: React.FC = () => {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 disabled={isLoading}
+                                data-cy="pass-field"
                             />
                         </div>
                     </div>
@@ -119,6 +109,7 @@ const LoginPage: React.FC = () => {
                             type="submit"
                             className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${isLoading ? 'bg-indigo-400 dark:bg-indigo-500 cursor-not-allowed' : 'bg-indigo-600 dark:bg-indigo-700 hover:bg-indigo-700 dark:hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'}`}
                             disabled={isLoading}
+                            data-cy="login-button"
                         >
                             {isLoading ? 'Logowanie...' : 'Zaloguj się'}
                         </button>

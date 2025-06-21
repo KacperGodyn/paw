@@ -69,6 +69,7 @@ const StoryCard: React.FC<StoryCardProps> = ({ story, onEdit, onDelete }) => {
             onClick={() => onEdit(story)}
             className="text-gray-400 hover:text-blue-600 p-0.5 rounded transition duration-150 ease-in-out"
             title="Edytuj"
+            data-cy="edit-story-icon"
           >
             {<FiEdit className="h-3.5 w-3.5" /> as React.JSX.Element}
           </button>
@@ -76,6 +77,7 @@ const StoryCard: React.FC<StoryCardProps> = ({ story, onEdit, onDelete }) => {
             onClick={() => onDelete(story.id)}
             className="text-gray-400 hover:text-red-600 p-0.5 rounded transition duration-150 ease-in-out"
             title="Usuń"
+            data-cy="delete-story"
           >
             {<FiTrash2 className="h-3.5 w-3.5" /> as React.JSX.Element}
           </button>
@@ -205,6 +207,7 @@ const StoryManager: React.FC<StoryManagerProps> = ({ activeProjectId }) => {
           onClick={handleShowAddForm}
           className="flex items-center bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-white font-semibold py-1.5 px-3 rounded-md text-sm transition duration-150 ease-in-out"
           title="Dodaj nową historyjkę"
+          data-cy="create-story"
         >
           {<FiPlus className="h-4 w-4 mr-1" /> as React.JSX.Element}
           Dodaj
@@ -225,6 +228,7 @@ const StoryManager: React.FC<StoryManagerProps> = ({ activeProjectId }) => {
               onChange={(e) => setName(e.target.value)}
               required
               className="border border-gray-300 dark:border-gray-600 p-2 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+              data-cy="story-name"  
             />
             <textarea
               id="storyDescription"
@@ -253,6 +257,7 @@ const StoryManager: React.FC<StoryManagerProps> = ({ activeProjectId }) => {
                 onChange={(e) => setStatus(e.target.value as StoryStatus)}
                 required
                 className="border border-gray-300 dark:border-gray-600 p-2 w-full rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-gray-100"
+                data-cy="edit-story"
               >
                  <option value="" disabled>Status...</option>
                  <option value="todo">Do zrobienia</option>
@@ -284,6 +289,7 @@ const StoryManager: React.FC<StoryManagerProps> = ({ activeProjectId }) => {
               <button
                 type="submit"
                 className="bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-white font-semibold py-1.5 px-3 rounded-md text-sm transition duration-150 ease-in-out"
+                data-cy="save-story"
               >
                 {editingStory ? "Zapisz" : "Dodaj"}
               </button>
